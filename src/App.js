@@ -6,6 +6,8 @@ import api from './services/api';
 function App() {
 
   const [input, setInput] = useState('')
+  const [cep, setCep] = useState({});
+
 
   async function handleSearch(){
    // 01310930/json/
@@ -17,11 +19,15 @@ function App() {
 
 
    try{
-    const response = await api.get('${input}/json');
-    console.log('RESPONSE', response)
+    const response = await api.get(`${input}/json`);
+    setCep(response.data)
+    setInput("");
+
    }catch{
     alert("Ops, erro ao buscar!")
+    setInput("")
    }
+
   }
 
   return (
@@ -41,15 +47,19 @@ function App() {
         </button>
         </div>
 
+
+      {Object.keys(cep).length > 0 && (
        <main className="main">
-        <h2>CEP: 22640102</h2>
+          <h2>CEP: {cep.cep}</h2>
 
-        <span>Logradouro: Avenida das Américas</span>
-        <span>Complemento: Barra Shopping</span>
-        <span>Bairro: Barra da Tijuca</span>
-        <span>Estado: Rio de Janeiro - RJ</span>
+          <span>{cep.logradouro}</span>
+          <span>{cep.complemento}</span>
+          <span>{cep.bairro}</span>
+          <span>{cep.localdade} - {cep.uf}</span>
 
-       </main>
+      </main>
+      )}
+       
     </div>
   );
 }
